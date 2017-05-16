@@ -215,6 +215,30 @@ describe SEPA::CreditTransfer do
         end
       end
 
+      context 'with currency' do
+        subject do
+          sct = credit_transfer
+
+          sct.add_transaction name:                   'Telekomiker AG',
+                              bic:                    'PBNKDEFF370',
+                              iban:                   'DE37112589611964645802',
+                              amount:                 102.50,
+                              reference:              'XYZ-1234/123',
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              currency:               'CHF'
+
+          sct.to_xml('pain.001.001.03')
+        end
+
+        it 'should create valid XML file' do
+          expect(subject).to validate_against('pain.001.001.03.xsd')
+        end
+
+        it 'should contain the currency attribute' do
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/Amt/InstdAmt[@Ccy=\'CHF\']')
+        end
+      end
+
       context 'with different batch_booking given' do
         subject do
           sct = credit_transfer

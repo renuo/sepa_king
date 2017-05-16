@@ -75,4 +75,13 @@ describe SEPA::Transaction do
       expect(SEPA::Transaction).not_to accept('', 'X' * 141, for: :remittance_information)
     end
   end
+
+  context 'Currency' do
+    it 'should not accept invalid currency' do
+      expect(SEPA::Transaction).not_to accept('CH', '', for: :currency)
+    end
+    it 'accepts valid currencies' do
+      expect(SEPA::Transaction).to accept('CHF', 'EUR', nil, for: :currency)
+    end
+  end
 end
