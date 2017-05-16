@@ -84,4 +84,13 @@ describe SEPA::Transaction do
       expect(SEPA::Transaction).to accept('CHF', 'EUR', nil, for: :currency)
     end
   end
+
+  context 'Charge Bearer' do
+    it 'should not accept invalid value' do
+      expect(SEPA::Transaction).not_to accept('ABC', '', for: :charge_bearer)
+    end
+    it 'accepts valid value' do
+      expect(SEPA::Transaction).to accept('DEBT', 'CRED', 'SHAR', nil, for: :charge_bearer)
+    end
+  end
 end

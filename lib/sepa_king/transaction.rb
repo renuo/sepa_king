@@ -8,7 +8,7 @@ module SEPA
 
     attr_accessor :name, :iban, :bic, :amount, :instruction, :reference,
                   :remittance_information, :requested_date, :batch_booking,
-                  :currency
+                  :currency, :charge_bearer
     convert :name, :instruction, :reference, :remittance_information, to: :text
     convert :amount, to: :decimal
 
@@ -19,6 +19,7 @@ module SEPA
     validates_numericality_of :amount, greater_than: 0
     validates_presence_of :requested_date
     validates_inclusion_of :batch_booking, :in => [true, false]
+    validates_inclusion_of :charge_bearer, in: %w[DEBT CRED SHAR SLEV], allow_nil: true
     validates_length_of :currency, is: 3, allow_nil: true
     validates_with BICValidator, IBANValidator, message: "%{value} is invalid"
 

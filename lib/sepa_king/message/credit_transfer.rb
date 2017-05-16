@@ -12,7 +12,8 @@ module SEPA
     def transaction_group(transaction)
       { requested_date: transaction.requested_date,
         batch_booking:  transaction.batch_booking,
-        service_level:  transaction.service_level
+        service_level:  transaction.service_level,
+        charge_bearer:  transaction.charge_bearer
       }
     end
 
@@ -51,8 +52,11 @@ module SEPA
               end
             end
           end
-          builder.ChrgBr('SLEV')
-
+          if group[:charge_bearer]
+            builder.ChrgBr(group[:charge_bearer])
+          else
+            builder.ChrgBr('SLEV')
+          end
           transactions.each do |transaction|
             build_transaction(builder, transaction)
           end
