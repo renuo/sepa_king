@@ -46,6 +46,17 @@ describe SEPA::Transaction do
     end
   end
 
+  context 'IID and code' do
+    it 'should accept valid IID and code' do
+      expect(SEPA::Transaction).to accept('123456', 123456, nil, for: :iid)
+      expect(SEPA::Transaction).to accept('CHBCC', 'DEBLZ', nil, for: :code)
+    end
+
+    it 'should not accept invalid code' do
+      expect(SEPA::Transaction).not_to accept('CHB', '', for: :code)
+    end
+  end
+
   context 'Amount' do
     it 'should accept valid value' do
       expect(SEPA::Transaction).to accept(0.01, 1, 100, 100.00, 99.99, 1234567890.12, BigDecimal('10'), '42', '42.51', '42.512', 1.23456, for: :amount)

@@ -79,10 +79,19 @@ module SEPA
             builder.InstdAmt('%.2f' % transaction.amount, Ccy: 'EUR')
           end
         end
-        if transaction.bic
+        if transaction.bic || transaction.iid
           builder.CdtrAgt do
             builder.FinInstnId do
-              builder.BIC(transaction.bic)
+              if transaction.bic
+                builder.BIC(transaction.bic)
+              elsif transaction.iid
+                builder.ClrSysMmbId do
+                  builder.ClrSysId do
+                    builder.Cd(transaction.code)
+                  end
+                  builder.MmbId(transaction.iid)
+                end
+              end
             end
           end
         end
