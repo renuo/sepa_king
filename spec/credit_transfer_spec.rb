@@ -269,7 +269,7 @@ describe SEPA::CreditTransfer do
 
           sct.add_transaction name:                   'Telekomiker AG',
                               iid:                    '1234',
-                              code:                    'ABCDE',
+                              clearing_code:          'ABCDE',
                               iban:                   'DE37112589611964645802',
                               amount:                 102.50,
                               reference:              'XYZ-1234/123',
@@ -302,7 +302,7 @@ describe SEPA::CreditTransfer do
         subject do
           sct = credit_transfer
           sct.add_transaction name: 'Telekomiker AG',
-                              code: 'ABCDE',
+                              clearing_code: 'ABCDE',
                               iban: 'DE37112589611964645802',
                               amount: 102.50
 
@@ -321,7 +321,7 @@ describe SEPA::CreditTransfer do
         subject do
           sct = credit_transfer
           sct.add_transaction name: 'Telekomiker AG',
-                              code: 'ABCDE',
+                              clearing_code: 'ABCDE',
                               iid:  '1234',
                               bic:  'PBNKDEFF370',
                               iban: 'DE37112589611964645802',

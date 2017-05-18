@@ -52,11 +52,7 @@ module SEPA
               end
             end
           end
-          if group[:charge_bearer]
-            builder.ChrgBr(group[:charge_bearer])
-          else
-            builder.ChrgBr('SLEV')
-          end
+          builder.ChrgBr(group[:charge_bearer].presence || 'SLEV')
           transactions.each do |transaction|
             build_transaction(builder, transaction)
           end
@@ -73,11 +69,7 @@ module SEPA
           builder.EndToEndId(transaction.reference)
         end
         builder.Amt do
-          if transaction.currency
-            builder.InstdAmt('%.2f' % transaction.amount, Ccy: transaction.currency)
-          else
-            builder.InstdAmt('%.2f' % transaction.amount, Ccy: 'EUR')
-          end
+          builder.InstdAmt('%.2f' % transaction.amount, Ccy: (transaction.currency.presence || 'EUR'))
         end
         if transaction.bic || transaction.iid
           builder.CdtrAgt do
@@ -87,7 +79,7 @@ module SEPA
               elsif transaction.iid
                 builder.ClrSysMmbId do
                   builder.ClrSysId do
-                    builder.Cd(transaction.code)
+                    builder.Cd(transaction.clearing_code)
                   end
                   builder.MmbId(transaction.iid)
                 end

@@ -167,7 +167,7 @@ sct.add_transaction(
   # String, 8 or 11 char
   iid:                    '700',
   # OPTIONAL: Clearing code of the country
-  code:                    'CHBCC',
+  clearing_code:          'CHBCC',
 
   # International Bank Account Number of the creditor's account
   # String, max. 34 chars

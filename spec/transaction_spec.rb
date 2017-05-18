@@ -49,11 +49,11 @@ describe SEPA::Transaction do
   context 'IID and code' do
     it 'should accept valid IID and code' do
       expect(SEPA::Transaction).to accept('123456', 123456, nil, for: :iid)
-      expect(SEPA::Transaction).to accept('CHBCC', 'DEBLZ', nil, for: :code)
+      expect(SEPA::Transaction).to accept('CHBCC', 'DEBLZ', nil, for: :clearing_code)
     end
 
     it 'should not accept invalid code' do
-      expect(SEPA::Transaction).not_to accept('CHB', '', for: :code)
+      expect(SEPA::Transaction).not_to accept('CHB', '', for: :clearing_code)
     end
   end
 
