@@ -215,6 +215,130 @@ describe SEPA::CreditTransfer do
         end
       end
 
+      context 'with currency' do
+        subject do
+          sct = credit_transfer
+
+          sct.add_transaction name:                   'Telekomiker AG',
+                              bic:                    'PBNKDEFF370',
+                              iban:                   'DE37112589611964645802',
+                              amount:                 102.50,
+                              reference:              'XYZ-1234/123',
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              currency:               'CHF'
+
+          sct.to_xml('pain.001.001.03')
+        end
+
+        it 'should create valid XML file' do
+          expect(subject).to validate_against('pain.001.001.03.xsd')
+        end
+
+        it 'should contain the currency attribute' do
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/Amt/InstdAmt[@Ccy=\'CHF\']')
+        end
+      end
+
+      context 'with charge bearer' do
+        subject do
+          sct = credit_transfer
+
+          sct.add_transaction name:                   'Telekomiker AG',
+                              bic:                    'PBNKDEFF370',
+                              iban:                   'DE37112589611964645802',
+                              amount:                 102.50,
+                              reference:              'XYZ-1234/123',
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              charge_bearer:          'CRED'
+
+          sct.to_xml('pain.001.001.03')
+        end
+
+        it 'should create valid XML file' do
+          expect(subject).to validate_against('pain.001.001.03.xsd')
+        end
+
+        it 'should contain the charge bearer attribute' do
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/ChrgBr', 'CRED')
+        end
+      end
+
+      context 'with IID' do
+        subject do
+          sct = credit_transfer
+
+          sct.add_transaction name:                   'Telekomiker AG',
+                              iid:                    '1234',
+                              clearing_code:          'ABCDE',
+                              iban:                   'DE37112589611964645802',
+                              amount:                 102.50,
+                              reference:              'XYZ-1234/123',
+                              remittance_information: 'Rechnung vom 22.08.2013'
+
+          sct.to_xml(SEPA::PAIN_001_001_03)
+        end
+
+        it 'should create valid pain.001.001.03 XML file' do
+          expect(subject).to validate_against('pain.001.001.03.xsd')
+        end
+
+        it 'should contain the ClrSysMmbId attribute' do
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/CdtrAgt/FinInstnId/ClrSysMmbId/ClrSysId/Cd', 'ABCDE')
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/CdtrAgt/FinInstnId/ClrSysMmbId/MmbId', '1234')
+        end
+
+        it 'should fail without code' do
+          sct = credit_transfer
+          sct.add_transaction name: 'Telekomiker AG',
+                              iid: '1234',
+                              iban: 'DE37112589611964645802',
+                              amount: 102.50
+
+          expect(sct.to_xml(SEPA::PAIN_001_001_03)).not_to validate_against('pain.001.001.03.xsd')
+        end
+      end
+
+      context 'without IID and without BIC' do
+        subject do
+          sct = credit_transfer
+          sct.add_transaction name: 'Telekomiker AG',
+                              clearing_code: 'ABCDE',
+                              iban: 'DE37112589611964645802',
+                              amount: 102.50
+
+          sct
+        end
+
+        it 'should fail' do
+          expect {
+            subject.to_xml(SEPA::PAIN_001_001_03)
+          }.to raise_error(RuntimeError)
+        end
+
+      end
+
+      context 'IID and BIC' do
+        subject do
+          sct = credit_transfer
+          sct.add_transaction name: 'Telekomiker AG',
+                              clearing_code: 'ABCDE',
+                              iid:  '1234',
+                              bic:  'PBNKDEFF370',
+                              iban: 'DE37112589611964645802',
+                              amount: 102.50
+
+          sct.to_xml(SEPA::PAIN_001_001_03)
+        end
+
+        it 'should create valid pain.001.001.03 XML file' do
+          expect(subject).to validate_against('pain.001.001.03.xsd')
+        end
+
+        it 'should use BIC with IID and bic' do
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/DbtrAgt/FinInstnId/BIC', 'BANKDEFFXXX')
+        end
+      end
+
       context 'with different batch_booking given' do
         subject do
           sct = credit_transfer

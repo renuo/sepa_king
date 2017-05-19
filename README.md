@@ -162,6 +162,13 @@ sct.add_transaction(
   # String, 8 or 11 char
   bic:                    'PBNKDEFF370',
 
+  # OPTIONAL: IID of the bank (Institution Identification)
+  # if IID is used the code is mandatory
+  # String, 8 or 11 char
+  iid:                    '700',
+  # OPTIONAL: Clearing code of the country
+  clearing_code:          'CHBCC',
+
   # International Bank Account Number of the creditor's account
   # String, max. 34 chars
   iban:                   'DE37112589611964645802',
@@ -194,7 +201,19 @@ sct.add_transaction(
   # One of these strings:
   #   'SEPA' ("SEPA-Zahlung")
   #   'URGP' ("Taggleiche Eilüberweisung")
-  service_level: 'URGP'
+  service_level: 'URGP',
+
+  # OPTIONAL: Charge Bearer
+  # One of these strings: (default: SLEV)
+  #   'SLEV' ("Service Level")
+  #   'DEBT' ("Borne by Debtor")
+  #   'CRED' ("Borne by Creditor")
+  #   'SHAR' ("Shared")
+  charge_bearer: 'DEBT',
+
+  # OPTIONAL: Currency
+  # Currency string
+  currency: 'CHF'
 )
 sct.add_transaction ...
 

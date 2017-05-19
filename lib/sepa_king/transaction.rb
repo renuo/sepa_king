@@ -6,7 +6,9 @@ module SEPA
 
     DEFAULT_REQUESTED_DATE = Date.new(1999, 1, 1).freeze
 
-    attr_accessor :name, :iban, :bic, :amount, :instruction, :reference, :remittance_information, :requested_date, :batch_booking
+    attr_accessor :name, :iban, :bic, :amount, :instruction, :reference,
+                  :remittance_information, :requested_date, :batch_booking,
+                  :currency, :charge_bearer, :iid, :clearing_code
     convert :name, :instruction, :reference, :remittance_information, to: :text
     convert :amount, to: :decimal
 
@@ -17,6 +19,9 @@ module SEPA
     validates_numericality_of :amount, greater_than: 0
     validates_presence_of :requested_date
     validates_inclusion_of :batch_booking, :in => [true, false]
+    validates_inclusion_of :charge_bearer, in: %w[DEBT CRED SHAR SLEV], allow_nil: true
+    validates_length_of :currency, is: 3, allow_nil: true
+    validates_length_of :clearing_code, is: 5, allow_nil: true
     validates_with BICValidator, IBANValidator, message: "%{value} is invalid"
 
     def initialize(attributes = {})

@@ -12,7 +12,8 @@ module SEPA
     def transaction_group(transaction)
       { requested_date: transaction.requested_date,
         batch_booking:  transaction.batch_booking,
-        service_level:  transaction.service_level
+        service_level:  transaction.service_level,
+        charge_bearer:  transaction.charge_bearer
       }
     end
 
@@ -51,8 +52,7 @@ module SEPA
               end
             end
           end
-          builder.ChrgBr('SLEV')
-
+          builder.ChrgBr(group[:charge_bearer].presence || 'SLEV')
           transactions.each do |transaction|
             build_transaction(builder, transaction)
           end
@@ -69,12 +69,21 @@ module SEPA
           builder.EndToEndId(transaction.reference)
         end
         builder.Amt do
-          builder.InstdAmt('%.2f' % transaction.amount, Ccy: 'EUR')
+          builder.InstdAmt('%.2f' % transaction.amount, Ccy: (transaction.currency.presence || 'EUR'))
         end
-        if transaction.bic
+        if transaction.bic || transaction.iid
           builder.CdtrAgt do
             builder.FinInstnId do
-              builder.BIC(transaction.bic)
+              if transaction.bic
+                builder.BIC(transaction.bic)
+              elsif transaction.iid
+                builder.ClrSysMmbId do
+                  builder.ClrSysId do
+                    builder.Cd(transaction.clearing_code)
+                  end
+                  builder.MmbId(transaction.iid)
+                end
+              end
             end
           end
         end
