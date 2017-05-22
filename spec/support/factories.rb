@@ -6,7 +6,8 @@ def credit_transfer_transaction(attributes={})
     iban:                   'DE37112589611964645802',
     amount:                 102.50,
     reference:              'XYZ-1234/123',
-    remittance_information: 'Rechnung vom 22.08.2013'
+    remittance_information: 'Rechnung vom 22.08.2013',
+    service_level:          'SEPA'
   }.merge(attributes)
 end
 
