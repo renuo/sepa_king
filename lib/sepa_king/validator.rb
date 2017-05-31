@@ -6,7 +6,7 @@ module SEPA
 
     def validate(record)
       field_name = options[:field_name] || :iban
-      value = record.send(field_name).to_s
+      value = record.send(field_name).to_s.gsub(/\s+/, '')
 
       unless IBANTools::IBAN.valid?(value) && value.match(REGEX)
         record.errors.add(field_name, :invalid, message: options[:message])
