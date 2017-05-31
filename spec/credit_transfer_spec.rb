@@ -53,7 +53,8 @@ describe SEPA::CreditTransfer do
                               iban:                   'DE37112589611964645802',
                               amount:                 102.50,
                               reference:              'XYZ-1234/123',
-                              remittance_information: 'Rechnung vom 22.08.2013'
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              service_level:          'SEPA'
 
           sct
         end
@@ -78,7 +79,8 @@ describe SEPA::CreditTransfer do
                               iban:                   'DE37112589611964645802',
                               amount:                 102.50,
                               reference:              'XYZ-1234/123',
-                              remittance_information: 'Rechnung vom 22.08.2013'
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              service_level:          'SEPA'
 
           sct
         end
@@ -105,13 +107,15 @@ describe SEPA::CreditTransfer do
                               iban:                   'DE37112589611964645802',
                               amount:                 102.50,
                               reference:              'XYZ-1234/123',
-                              remittance_information: 'Rechnung vom 22.08.2013'
+                              remittance_information: 'Rechnung vom 22.08.2013',
+                              service_level:          'SEPA'
 
           sct.add_transaction name:                   'Amazonas GmbH',
                               iban:                   'DE27793589132923472195',
                               amount:                 59.00,
                               reference:              'XYZ-5678/456',
-                              remittance_information: 'Rechnung vom 21.08.2013'
+                              remittance_information: 'Rechnung vom 21.08.2013',
+                              service_level:          'SEPA'
 
           sct.to_xml
         end
@@ -399,7 +403,8 @@ describe SEPA::CreditTransfer do
           sct.add_transaction name:                   'Telekomiker AG',
                               iban:                   'DE37112589611964645802',
                               amount:                 102.50,
-                              instruction:            '1234/ABC'
+                              instruction:            '1234/ABC',
+                              service_level:          'SEPA'
 
           sct.to_xml
         end
