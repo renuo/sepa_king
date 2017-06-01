@@ -10,7 +10,10 @@ describe SEPA::IBANValidator do
   end
 
   it 'should accept valid IBAN' do
-    expect(Validatable).to accept('DE21500500009876543210', 'DE87200500001234567890', for: [:iban, :iban_the_terrible])
+    expect(Validatable).to accept('DE21500500009876543210',
+                                  'DE87200500001234567890',
+                                  'DE87 2005 0000 1234 5678 90',
+                                  for: [:iban, :iban_the_terrible])
   end
 
   it 'should not accept an invalid IBAN' do
@@ -18,7 +21,6 @@ describe SEPA::IBANValidator do
                                       'DE22500500009876543210',      # wrong checksum
                                       'DE2150050000987654321',       # too short
                                       'de87200500001234567890',      # downcase characters
-                                      'DE87 2005 0000 1234 5678 90', # spaces included
                                for: [:iban, :iban_the_terrible])
   end
 
