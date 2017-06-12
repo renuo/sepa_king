@@ -417,6 +417,24 @@ describe SEPA::CreditTransfer do
           expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/PmtId/InstrId', '1234/ABC')
         end
       end
+
+      context 'with pain.001.001.03.ch.02' do
+        subject do
+          sct = credit_transfer
+          sct.add_transaction name: 'Telekomiker AG',
+                              clearing_code: 'ABCDE',
+                              iid:  '1234',
+                              bic:  'PBNKDEFF370',
+                              iban: 'DE37112589611964645802',
+                              amount: 102.50
+
+          sct.to_xml(SEPA::PAIN_001_001_03_CH, 'http://www.six-interbank-clearing.com/de/')
+        end
+
+        it 'should create valid XML file' do
+          expect(subject).to validate_against('pain.001.001.03.ch.02.xsd')
+        end
+      end
     end
   end
 end
