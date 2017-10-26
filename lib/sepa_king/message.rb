@@ -103,7 +103,7 @@ module SEPA
       xmlns = "urn:iso:std:iso:20022:tech:xsd:#{schema_name}" if url.nil?
       { :xmlns                => xmlns,
         :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-        :'xsi:schemaLocation' => "urn:iso:std:iso:20022:tech:xsd:#{schema_name} #{schema_name}.xsd" }
+        :'xsi:schemaLocation' => "#{xmlns} #{schema_name}.xsd" }
     end
 
     def build_group_header(builder)
